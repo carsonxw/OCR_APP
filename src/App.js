@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Tesseract, { setLogging } from "tesseract.js";
+import Tesseract from "tesseract.js";
 import "./App.css";
 
 const App = () => {
