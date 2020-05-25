@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import Tesseract from "tesseract.js";
+import Tesseract, { setLogging } from "tesseract.js";
 import "./App.css";
 
 const App = () => {
   const [uploads, setUploads] = useState([]);
   const [patterns, setPatterns] = useState([]);
   const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
     console.log(event.target.files);
@@ -24,7 +25,7 @@ const App = () => {
 
   const generateText = () => {
     let _uploads = uploads;
-
+    setLoading(true);
     for (let i = 0; i < _uploads.length; i++) {
       Tesseract.recognize(_uploads[i], "eng", { logger: (m) => console.log(m) })
         .then(({ data }) => {
@@ -45,9 +46,11 @@ const App = () => {
               confidence: confidence,
             })
           );
+          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
+          setLoading(false);
         });
     }
   };
@@ -66,6 +69,7 @@ const App = () => {
             type="file"
             id="fileUploader"
             multiple
+            disabled={loading}
             onChange={handleChange}
           ></input>
         </label>
@@ -75,7 +79,7 @@ const App = () => {
           })}
         </div>
         <button className="button" onClick={() => generateText()}>
-          Generate
+          {loading ? "Reading Text..." : "Generate"}
         </button>
       </section>
 
